@@ -8,7 +8,7 @@
       <br>
       <div  v-for="(i,index) in TeamData" style="float: left">
         <div v-for="j in 15" style="float: left">&nbsp;</div>
-        <el-card class="box-card">
+        <el-card class="box-card" shadow="hover">
           <div slot="header" class="clearfix" style="height: 30px">
             <div style="float: left;font-size: 20px">{{i.name}}</div>
             <div style="float: right">
@@ -20,7 +20,7 @@
             <el-button type="text" style="color:red;font-size: 15px" @click="quit(index)">退出</el-button>
           </div>
         </el-card>
-        <br>
+        <br><br><br>
       </div>
       <div style="float: left">
         <div v-for="j in 15" style="float: left">&nbsp;</div>
@@ -44,7 +44,8 @@
       :visible.sync="NewMessageVisible"
       width="30%">
       <div style="width: 80%">
-        团队名称:<br><el-input placeholder="请输入团队名称" v-model="NewTeamData.name"></el-input>
+        团队名称:<br><br>
+        <el-input placeholder="请输入团队名称" v-model="NewTeamData.name"></el-input>
       </div>
       <br><br>
       <div>团队信息:</div>

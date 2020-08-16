@@ -1,63 +1,64 @@
 <template>
   <div>
-    <p id="head">最近浏览</p>
-    <el-main>
-      <el-row id="firstblock">
-        <div @click="tonewfile">
-          <el-col class="eachcard" :span="3">
-            <el-card :body-style="{ padding: '10px' }">
-              <img src="../assets/newfile.png" class="image">
-              <div style="padding: 12px;">
-                <span id="newtitle">新建文档</span>
-              </div>
-              <div class="bottom clearfix"></div>
-            </el-card>
-          </el-col>
-        </div>
-        <div v-for="(item,index) in card" :key="index">
-          <el-col class="eachcard" :span="3">
-            <el-card :body-style="{ padding: '10px' }">
-              <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image" @click="viewfile(item.id)">
-              <div style="padding: 5px;">
-                <span id="title">{{item.title}}</span>
-                <div class="bottom clearfix">
-                  <time class="time">{{ currentDate }}</time>
-                  <el-dropdown @command="handleCommand" style="padding-left: 5px;float: right;" :key="item.id">
-                    <span style="cursor:pointer;color:#409EFF"><i class="el-icon-more-outline"></i></span>
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item v-for="(item2,i) in operate" :key="i" :command="{task:item2.task,id:item.id}" style="flex: 1">{{item2.title}}</el-dropdown-item>
-                    </el-dropdown-menu>
-                  </el-dropdown>
-                  <el-button type="text" class="button" @click="edititem(item.id)">编辑</el-button>
+    <div style="width: 70%;margin-top: 30px;float: left">
+      <div class="info" style="float: left">
+        <h1 style="float: left">最近浏览</h1>
+      </div>
+      <div class="info" style="border-bottom:2px solid #CCC;padding-top: 100px"></div>
+      <el-main>
+        <el-row id="firstblock">
+          <div style="float: left">
+            <div v-for="j in 8" style="float: left">&nbsp;</div>
+            <el-button type="info" style="height: 250px;width: 200px;font-size:150px;float: left; margin-top: 30px;margin-right: 30px;" icon="el-icon-circle-plus" class="clearfix" @click="tonewfile()"></el-button>
+          </div>
+          <div v-for="(item,index) in card" :key="index" style="float:left;">
+            <el-col class="eachcard">
+              <el-card class="box-card">
+                <el-image :src="require('../assets/file_logo.jpg')" fit="fill"> </el-image>
+                <div>
+                  <br>
+                  <div style="font-size: 20px;white-space: nowrap; text-overflow: ellipsis; overflow: hidden; width:140px">
+                    <span id="title" >{{item.title}}</span>
+                  </div>
+                  <div style="font-size: 13px; margin-top: 8px;float: left;font-style: italic;white-space: nowrap; text-overflow: ellipsis; overflow: hidden; width:140px">
+                    <span>Written By {{item.author}}</span>
+                  </div>
+                  <br>
+                  <div class="bottom clearfix">
+                    <time class="time">{{ item.date }}</time>
+                    <el-dropdown @command="handleCommand" style="padding-left: 5px;float: right;" :key="item.id">
+                      <span style="cursor:pointer;color:#409EFF"><i class="el-icon-more"></i></span>
+                      <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item v-for="(item2,i) in operate" :key="i" :command="{task:item2.task,id:item.id,cot:index}" style="flex: 1">{{item2.title}}</el-dropdown-item>
+                      </el-dropdown-menu>
+                    </el-dropdown>
+                    <el-button type="text" class="button" @click="edititem(item.id)">编辑</el-button>
+                  </div>
                 </div>
-              </div>
-            </el-card>
-          </el-col>
-        </div>
-      </el-row>
-    </el-main>
+              </el-card>
+            </el-col>
+          </div>
+
+        </el-row>
+      </el-main>
+    </div>
   </div>
 </template>
 
 <script>
   import TopTools from "./TopTools";
   import Aside from "./Aside";
-  // import HomeMenuBar from "./HomeMenuBar";
   export default {
     name: "Home",
     data(){
       return{
         card: [
-          {icon: "el-icon-edit", title: "工作台", url:'/tools/home',id : "1"},
-          {icon: "el-icon-share", title: "啦啦啦啦", url:'/tools/home',id : "2"},
-          {icon: "el-icon-delete", title: "导航三", url:'/tools/home',id : "3"},
-          {icon: "el-icon-user", title: "导航四", url:'/tools/home',id : "4"},
-          {icon: "el-icon-edit", title: "工作台", url:'/tools/home',id : "5"},
-          {icon: "el-icon-share", title: "啦啦啦啦", url:'/tools/home',id : "6"},
-          {icon: "el-icon-delete", title: "导航三", url:'/tools/home',id : "7"},
-          {icon: "el-icon-user", title: "导航四", url:'/tools/home',id : "8"},
-          {icon: "el-icon-edit", title: "工作台", url:'/tools/home',id : "9"},
-          {icon: "el-icon-share", title: "啦啦啦啦", url:'/tools/home',id : "10"},
+          {title: "最近文档一有有有有有有有有有有有有有有有有有有有", id : "1", author:"y1", date: "2020-01-11"},
+          {title: "最近文档二啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦", id : "2", author:"y2", date: "2020-08-11"},
+          {title: "最近文档三" ,id : "3", author:"y3", date: "2020-07-11"},
+          {title: "最近文档四", id : "4", author:"y4", date: "2020-06-11"},
+          {title: "最近文档五哇哇哇哇哇哇哇哇哇哇哇", id : "5", author:"y55555555555555", date: "2020-05-11"},
+          {title: "最近文档六", id : "6", author:"y6", date: "2020-04-11"},
         ],
         currentDate: "2020-08-11",
         operate:[
@@ -65,6 +66,33 @@
           {title: "删除", task: "delete"}
         ],
       }
+    },
+    created(){
+      //需要获取最近文档信息，存在card中，
+      //title是文档名称，url是文档链接(可以不管)，id就是文档id，author是文档作者
+      const _this = this;
+      console.log("created_recent_file");
+      this.$axios.get('http://localhost:8181/myblog/1/5').then(
+        (respond) => {
+          console.log(respond);
+          const dataList = respond.data;
+          this.totalblog = dataList.totalElements;
+          for (let i = 0; i < dataList.content.length; i++) {
+            this.card.push({
+              id: dataList.content[i].blog_id,
+              title: dataList.content[i].title,
+            })
+          }
+        }
+      ).catch((error) => {
+        console.log(error);
+        for (let i = 0; i < 3; i++) {
+          this.card.push({
+            id: "-3" + i,
+            title: "ERROR",
+          })
+        };
+      })
     },
     methods:{
       tonewfile(){
@@ -74,34 +102,45 @@
         alert("查看文档"+id);
       },
       shareitem(id){
-        console.log("分享"+ id);
+        this.$notify({
+          title: '复制链接以分享',
+          message: '???' + id,
+          type: 'success'
+        });
       },
-      deleteitem(id){
-        console.log("删除"+ id);
+      deleteitem(id,index){
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.card.splice(index,1);
+          this.$axios.delete(''+id).then((resp)=> { //这个地方需要删除最近文档，或者后面商量一下作为收藏也可以
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+            window.location.reload()
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
       },
       handleCommand(item){
         if(item.task === "share"){
-          console.log("分享"+item.id);
+          this.shareitem(item.id)
         };
         if(item.task === "delete"){
-          console.log("删除"+item.id);
+          this.deleteitem(item.id,item.cot)
         }
       },
       edititem(id){
         console.log("编辑"+ id);
+        this.$router.push('/tools/editfile')
       },
-    },
-    created() {
-      /*这里写后端代码（初始化）
-
-
-
-
-
-
-
-
-       */
     },
     components: {Aside, TopTools},
     currentDate: new Date()
@@ -113,10 +152,8 @@
 </style>
 
 <style>
-  p#head {
-    margin-top: 50px;
-    margin-left: 330px;
-    font-size: 2em;
+  .info{
+    margin-left: 8%;
   }
 
   #title {
@@ -163,5 +200,10 @@
 
   #newtitle {
     margin-left: 28%;
+  }
+
+  .box-card {
+    width: 200px;
+    height: 250px;
   }
 </style>

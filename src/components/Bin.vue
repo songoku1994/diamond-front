@@ -9,14 +9,13 @@
         <el-table :data="BinData" stripe border>
         <el-table-column prop="Name" label="文件名" width="220"></el-table-column>
         <el-table-column prop="DeleteDate" label="删除日期" width="200"></el-table-column>
-        <el-table-column
-          width="212">
+        <el-table-column>
           <el-button-group slot-scope="scope">
-            <el-button @click="Recover(scope.row)" type="primary" size="small">恢复</el-button>
-            <el-button @click="MoreMessage(scope.row)" type="normal" size="small">详情</el-button>
-            <el-button @click="FinalDelete(scope.row)" type="danger" size="small">彻底删除</el-button>
+            <el-button @click="Recover(scope.row)" type="primary" size="small" style="width: 80px">恢复</el-button>
+            <el-button @click="MoreMessage(scope.row)" type="info" size="small" style="width: 80px">详情</el-button>
+            <el-button @click="FinalDelete(scope.row)" type="danger" size="small" style="width: 80px">彻底删除</el-button>
           </el-button-group>
-          </el-table-column>
+        </el-table-column>
       </el-table>
       </div>
       <br>
