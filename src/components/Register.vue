@@ -23,7 +23,9 @@
     </el-row>
     <el-row type="flex" justify="center">
       <el-col :span="6">
-        <el-button type="primary" style="width: 100%;" @click="doSubmit()">注册</el-button>
+        <el-button type="primary" style="width: 100%;" @click="doSubmit()"
+        >注册</el-button
+        >
       </el-col>
     </el-row>
   </div>
@@ -31,27 +33,46 @@
 
 <script>
   export default {
-    name: 'login',
+    name: "login",
     data() {
       return {
-        username: '',
-        password:'',
-        password2:''
-      }
+        username: "",
+        password: "",
+        password2: ""
+      };
     },
-    methods:{
-      doSubmit(){
-        this.$router.push({
-          path:'/login',
-          query:{
-            username:this.username,
-            password:this.password
-          }
-        });
+    methods: {
+      doSubmit() {
+        var a=this.password;
+        var b=this.password2;
+        if (a==b) {
+          this.$router.push({
+            path: "/login",
+            query: {
+              username: this.username,
+              password: this.password
+            }
+          });
+          this.$message({
+            showClose: true,
+            message: "注册成功！",
+            type: "success"
+          });
+        } else {
+          this.$message({
+            showClose: true,
+            message: "注册失败！",
+            type: "error"
+          });
+          return {
+            username: "",
+            password: "",
+            password2: ""
+          };
+        }
       }
-
     }
-  }
+  };
 </script>
 
 <style>

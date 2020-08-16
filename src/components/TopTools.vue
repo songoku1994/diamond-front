@@ -3,7 +3,7 @@
     <br>
     <div style="display:flex;line-height: 80px;background-color: #B3C0D1">
       <div v-for="i in 4">&nbsp</div>
-      <div><el-button icon="el-icon-s-home" type="primary" @click="jump('/home')">金刚石文档</el-button></div>
+      <div><el-button icon="el-icon-s-home" type="primary" @click="jump('/tools/home')">金刚石文档</el-button></div>
       <div style="flex: 1"></div>
         <div style="display: flex">
           <div><el-input placeholder="搜索文档" v-model="SearchInput" clearable suffix-icon="el-icon-search"></el-input></div>
@@ -28,15 +28,15 @@
 <script>
     export default {
         name: "TopTools",
-        data(){
+      data(){
           return{
             SearchInput:'',
             Mine:[
-              {name:'我的个人信息',url:'/userinfo'},
-              {name:'我的消息',url:'/usermessage',newnum:5},
-              {name:'我的团队',url:'/userteam'},
-              {name:'我的文档',url:'userfile'},
-              {name:'我的回收站',url:'/bin'},
+              {name:'我的个人信息',url:'/tools/userinfo'},
+              {name:'我的消息',url:'/tools/usermessage',newnum:5},
+              {name:'我的团队',url:'/tools/userteam'},
+              {name:'我的文档',url:'/tools/userfile'},
+              {name:'我的回收站',url:'/tools/bin'},
               ]
           }
         },
@@ -45,13 +45,6 @@
             if(this.$route.path!=url)
             this.$router.push(url)
           },
-        searchName(url){
-            for(j=0;j<routes.length;j++){
-              if(routes[j].path===url){
-                console.log(routes[j].name)
-              }
-            }
-        }
       }
     }
 </script>

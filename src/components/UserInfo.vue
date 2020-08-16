@@ -1,7 +1,5 @@
 <template>
   <div class="total">
-    <TopTools></TopTools>
-    <Aside></Aside>
     <div style="width: 70%;margin-top: 30px;float: left">
       <div class="info" style="float: left">
         <h1 style="float: left">个人资料</h1>
@@ -68,6 +66,18 @@
   import Aside from "./Aside";
   export default {
     name: "UserInfo",
+    created() {
+      /*这里写后端代码（初始化）
+
+
+
+
+
+
+
+
+       */
+    },
     components: {Aside, TopTools},
     data(){
       return{

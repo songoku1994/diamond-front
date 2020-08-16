@@ -1,17 +1,14 @@
 <template>
-  <div>
-
     <router-view></router-view>
-  </div>
 </template>
-
 <script>
-  import TopTools from "./components/TopTools";
-  import Aside from "./components/Aside";
-  import Home from "./components/Home";
+  import Tools from "./components/Tools";
   export default {
   name: 'App',
-  components: {Home, Aside, TopTools},
+  components:{Tools},
+  data(){
+
+  }
 }
 </script>
 

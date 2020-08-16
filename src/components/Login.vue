@@ -46,8 +46,8 @@
         this.$router.push('/register');
       },
       doSubmit(){
-        this.$router.push('/home')
-      }
+        this.$router.push('/tools/home')
+      },
     }
   }
 </script>
