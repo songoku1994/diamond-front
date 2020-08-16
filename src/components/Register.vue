@@ -1,7 +1,7 @@
 <template>
   <div>
-    <el-row style="text-align: center; margin-top: 5cm;">
-      <h1 align="center">用户登录</h1>
+    <el-row style="text-align: center; margin-top: 4.2cm;">
+      <h1 align="center">用户注册</h1>
     </el-row>
     <el-row type="flex" justify="center">
       <el-col :span="6">
@@ -17,13 +17,14 @@
     </el-row>
     <el-row type="flex" justify="center">
       <el-col :span="6">
-        <el-button type="primary" style="width: 100%;" @click="doSubmit()">登录</el-button>
+        <el-input placeholder="请确认密码" v-model="password2" show-password>
+        </el-input>
       </el-col>
     </el-row>
-    <el-row style="text-align: center; margin-top: -10px;;">
-      <el-link type="primary">忘记密码</el-link>
-      <el-col span="2"></el-col>
-      <el-link type="primary" @click="doRegister()">用户注册</el-link>
+    <el-row type="flex" justify="center">
+      <el-col :span="6">
+        <el-button type="primary" style="width: 100%;" @click="doSubmit()">注册</el-button>
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -34,20 +35,21 @@
     data() {
       return {
         username: '',
-        password:''
+        password:'',
+        password2:''
       }
     },
-    created() {
-      this.username=this.$route.query.username
-      this.password=this.$route.query.password
-  },
     methods:{
-      doRegister(){
-        this.$router.push('/register');
-      },
       doSubmit(){
-        this.$router.push('/home')
+        this.$router.push({
+          path:'/login',
+          query:{
+            username:this.username,
+            password:this.password
+          }
+        });
       }
+
     }
   }
 </script>

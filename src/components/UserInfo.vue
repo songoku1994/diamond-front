@@ -3,126 +3,204 @@
     <TopTools></TopTools>
     <Aside></Aside>
     <div style="width: 70%;margin-top: 30px;float: left">
-    <div class="info" style="float: left">
+      <div class="info" style="float: left">
         <h1 style="float: left">个人资料</h1>
-        <el-button class="edit_button" type="primary" v-show="!isEdit" @click="clickedit_info">修改信息</el-button>
+        <el-button class="edit_button" type="primary" v-show="!isEdit" @click="clickedit_info()">修改信息</el-button>
         <el-button class="edit_button" type="primary" v-show="isEdit" @click="submitForm('ruleForm')">保存信息
         </el-button>
         <el-button @click="resetForm('ruleForm')" v-show="isEdit">重置</el-button>
-    </div>
-    <div class="info" style="border-bottom:2px solid #CCC;padding-top: 100px;margin-right:100px"></div>
-    <div class="info" v-show="!isEdit" style="padding-top: 30px">
-        <h3 style="float: left">头像：</h3>
+      </div>
+      <div class="info" style="border-bottom:2px solid #CCC;padding-top: 100px;margin-right:100px"></div>
+      <div class="info" v-show="!isEdit" style="padding-top: 30px">
+        <i class="el-icon-picture-outline" style="float: left;font-size:30px; margin-top: 33px; margin-right:10px"></i>
+        <h3 style="float: left;margin-top:35px">头像：</h3>
         <img class="photo" src="../assets/logo.png" alt="">
-    </div>
-    <div class="info" v-show="!isEdit" style="padding-top: 100px">
+      </div>
+      <div class="info" v-show="!isEdit" style="padding-top: 100px">
         <div>
-            <h3 style="float: left">昵称：{{Nick}}</h3>
+          <i class="el-icon-view" style="float: left;font-size:30px; margin-top: 17px; margin-right:10px"></i>
+          <h3 style="float: left">昵称：{{Nick}}</h3>
         </div>
-    </div>
-    <div class="info" v-show="!isEdit" style="padding-top: 70px">
+      </div>
+      <div class="info" v-show="!isEdit" style="padding-top: 70px">
+        <i class="el-icon-user" style="float: left;font-size:30px; margin-top: 17px; margin-right:10px"></i>
         <h3 style="float: left">性别：{{Sex}}</h3>
-    </div>
-    <div class="info" v-show="!isEdit" style="padding-top: 70px">
+      </div>
+      <div class="info" v-show="!isEdit" style="padding-top: 70px">
+        <i class="el-icon-present" style="float: left;font-size:30px; margin-top: 17px; margin-right:10px"></i>
         <h3 style="float: left">生日：{{Birthday}}</h3>
-    </div>
-    <div class="info" v-show="!isEdit" style="padding-top: 70px">
-        <h3 style="float: left">学校：{{School}}</h3>
-    </div>
+      </div>
+      <div class="info" v-show="!isEdit" style="padding-top: 70px">
+        <i class="el-icon-school" style="float: left;font-size:30px; margin-top: 17px; margin-right:10px"></i>
+        <h3 style="float: left">邮箱：{{Email}}</h3>
+      </div>
 
+      <div id="editform" v-if="isEdit" style="padding-top: 30px">
+        <el-form class="change" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px">
+          <el-form-item label="昵称：" prop="nick" style="font-size:30px">
+            <el-input v-model="ruleForm.nick" style="width: 200px;float: left"></el-input>
+          </el-form-item>
+          <el-form-item label="性别：" prop="sex">
+            <el-radio-group v-model="ruleForm.sex" style="float: left;padding-top: 13px">
+              <el-radio label="男"></el-radio>
+              <el-radio label="女"></el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="生日：" required>
+            <el-col :span="11">
+              <el-form-item prop="birthday">
+                <el-date-picker type="date" style="width: 200px;float: left" placeholder="选择日期"
+                                v-model="ruleForm.birthday" value-format="yyyy-MM-dd"></el-date-picker>
+              </el-form-item>
+            </el-col>
+          </el-form-item>
+          <el-form-item label="邮箱：" prop="email" style="font-size:30px">
+            <el-input v-model="ruleForm.email" style="width: 200px;float: left"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import TopTools from "./TopTools";
-import Aside from "./Aside";
-export default {
+  import TopTools from "./TopTools";
+  import Aside from "./Aside";
+  export default {
     name: "UserInfo",
-  components: {Aside, TopTools},
-  data(){
+    components: {Aside, TopTools},
+    data(){
       return{
-        Nick: "DarkShining",
+        ruleForm: {
+          nick: this.Nick,
+          sex: this.Sex,
+          birthday: this.Birthday,
+          email: this.Email,
+          userid: this.User_id
+        },
+        rules: {
+          nick: [
+            {required: false, message: '请填写您的昵称', trigger: 'blur'}
+          ],
+          sex: [
+            {required: true, message: '请选择您的性别', trigger: 'change'}
+          ],
+          birthday: [
+            {required: true, message: '请选择您的生日', trigger: 'change'}
+          ],
+          email: [
+            {required: true, message: '请填写您的邮箱', trigger: 'blur'},
+            { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
+          ],
+        },
+        Username: "DarkShining",
+        Nick: "欧豆豆",
         Sex: "男",
         Birthday: "1999-11-26",
-        School: "BUAA",
-        isEdit:false
+        Email: "269096320@qq.com",
+        isEdit: false,
+
       }
     },
     methods:{
-      clickedit_info(){
-
-      }
-    }
-}
+      lll(){
+        this.$router.push("/login");
+      },
+      submitForm: function (formName) {
+        const _this = this;
+        this.isEdit = false;
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.$axios.put('  ', this.ruleForm).then(function (resp) {//提交对个人信息的修改，需要提供接口
+              console.log(resp);
+              if (resp.data === 100) {
+                _this.$alert("修改信息成功", "修改结果");
+                window.location.reload()
+              } else {
+                _this.$alert("修改信息失败，请检查您的网络设置", "信息上传失败");
+              }
+            }).catch((error) => {
+              console.log(error);
+              _this.resetForm(formName);
+            });
+          } else {
+            _this.$alert("修改信息失败", "数据格式错误");
+            return false;
+          }
+          this.isEdit = false;
+        });
+      },//表单提交，修改信息
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      },
+      clickedit_info() {
+        this.isEdit = true;
+        this.ruleForm.nick = this.Nick;
+        this.ruleForm.sex = this.Sex;
+        this.ruleForm.birthday = this.Birthday;
+        this.ruleForm.email = this.Email;
+      },
+      get_myinfo() {
+        /**
+         * @Interface 请求用户个人信息数据块集
+         * 处理后扔进myinfo，然后再渲染,缺接口地址
+         * 头像先不管
+         * [attr1]: "这里是昵称",
+         * [attr2]: "这里是性别",
+         * [attr3]: "这里是邮箱",
+         * [attr4]: "这里是生日"date类型，格式为，"yyyy-MM-dd"
+         *
+         */
+        console.log("created_info");
+        this.$axios.get(' ').then( //需要修改个人信息的接口
+          (respond) => {
+            console.log(respond);
+            const dataList = respond.data;
+            //this.User_image = ;
+            //this.Nick = ;
+            //this.Sex = ;
+            //this.Birthday = ;
+            //this.School = ;
+            //this.User_id = ;
+            console.log(this.User_id);
+          }
+        ).catch((error) => {
+          console.log(error);
+          this.Nick = "未接收到数据";
+          this.Sex = "";
+          this.Birthday = "";
+          this.School = "未接收到数据";
+          this.User_image = "../assets/logo.png";
+          //this.$router.push("/login");
+        });
+      },
+    },
+  }
 </script>
 
 <style scoped>
-    .info{
-      margin-left: 8%;
-    }
+  #editform{
+    font-size: 50px;
+  }
 
-    .each {
-        width: 30%;
-        border: 1px solid black;
-        margin: 5px;
-        cursor: pointer;
-    }
+  .info{
+    margin-left: 8%;
+  }
 
-    .clitem {
-        position: relative;
-        width: 90%;
-        height: 100px;
-        border: 3px solid grey;
-        border-radius: 15px;
-    }
+  .change{
+    margin-left: 5%;
+    font-size: 20px;
+  }
 
-    .index {
-        padding-top: 18px;
-        padding-left: 30px;
-        float: left
-    }
+  .edit_button {
+    margin-top: 25px;
+    margin-left: 20px;
+  }
 
-    .edit_blog {
-        position: absolute;
-        top: 28px;
-        right: 100px;
-    }
+  .photo {
+    width: 100px;
+    height: 100px;
+    float: left
+  }
 
-    .destory_focus {
-        position: absolute;
-        top: 28px;
-        right: 50px;
-    }
-
-    .edit_button {
-        margin-top: 25px;
-        margin-left: 20px;
-    }
-
-    .photo {
-        width: 100px;
-        height: 100px;
-        float: left
-    }
-
-    .inputitem {
-        margin-top: 15px;
-        float: left;
-        position: relative;
-        font-size: 14px;
-        width: 20%;
-    }
-
-    .inputitem_sex {
-        margin-top: 25px;
-        float: left;
-        position: relative;
-        font-size: 14px;
-    }
-
-    .editbirth {
-        float: left;
-        margin-top: 15px;
-    }
 </style>
