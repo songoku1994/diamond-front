@@ -7,9 +7,9 @@
         <div style="display: flex">
           <div><el-input placeholder="搜索文档" v-model="SearchInput" clearable suffix-icon="el-icon-search"></el-input></div>
           <div v-for="i in 4">&nbsp</div>
-          <div><el-button icon="el-icon-search" type="primary">搜索</el-button></div>
+          <div><el-button icon="el-icon-search" type="primary" @click="jump('/tools/searchfile')">搜索</el-button></div>
           <div v-for="i in 4">&nbsp</div>
-          <div><el-button type="danger" icon="el-icon-error" @click="jump('/login')">注销</el-button></div>
+          <div><el-button type="danger" icon="el-icon-error" @click="ClearCookie()">注销</el-button></div>
           <div v-for="i in 4">&nbsp</div>
         </div>
     </div>
@@ -24,7 +24,7 @@
             SearchInput:'',
             Mine:[
               {name:'我的个人信息',url:'/tools/userinfo'},
-              {name:'我的消息',url:'/tools/usermessage',newnum:5},
+              {name:'我的消息',url:'/tools/usermessage'},
               {name:'我的团队',url:'/tools/userteam'},
               {name:'我的文档',url:'/tools/userfile'},
               {name:'我的回收站',url:'/tools/bin'},
@@ -36,6 +36,10 @@
             if(this.$route.path!=url)
             this.$router.push(url)
           },
+        ClearCookie(){
+          this.$store.commit('logout')
+          this.jump('/login')
+        },
       }
     }
 </script>

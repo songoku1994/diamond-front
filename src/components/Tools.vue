@@ -9,10 +9,10 @@
 <script>
     import TopTools from "./TopTools";
     import Aside from "./Aside";
-    import Editfile from "./Editfile";
+    import NewFile from "./NewFile";
     export default {
         name: "Tools",
-      components: {Editfile, Aside, TopTools}
+      components: {NewFile, Aside, TopTools},
     }
 </script>
 <style>
