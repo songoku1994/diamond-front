@@ -1,15 +1,13 @@
 <template>
-    <router-view></router-view>
+    <router-view/>
 </template>
 <script>
-  import Tools from "./components/Tools";
+  import test from './components/test'
   export default {
   name: 'App',
-  components:{Tools},
-  data(){
-
-  }
+    components:{test}
 }
+
 </script>
 
 <style>

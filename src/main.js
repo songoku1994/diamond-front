@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import VueQuillEditor from 'vue-quill-editor'
 
 Vue.config.productionTip = false
 
@@ -10,7 +11,7 @@ Vue.config.productionTip = false
 import ElementUI from 'element-ui';
 
 import 'element-ui/lib/theme-chalk/index.css';
-
+Vue.use(VueQuillEditor)
 Vue.use(ElementUI);
 Vue.use(ElementUI, { size: 'small', zIndex: 3000 });
 new Vue({

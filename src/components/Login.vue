@@ -22,7 +22,7 @@
     </el-row>
     <el-row style="text-align: center; margin-top: -10px;;">
       <el-link type="primary">忘记密码</el-link>
-      <el-col span="2"></el-col>
+      <el-col></el-col>
       <el-link type="primary" @click="doRegister()">用户注册</el-link>
     </el-row>
   </div>

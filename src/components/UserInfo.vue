@@ -8,7 +8,7 @@
         </el-button>
         <el-button @click="resetForm('ruleForm')" v-show="isEdit">重置</el-button>
       </div>
-      <div class="info" style="border-bottom:2px solid #CCC;padding-top: 100px;margin-right:100px"></div>
+      <div class="info" style="border-bottom:2px solid #CCC;padding-top: 100px"></div>
       <div class="info" v-show="!isEdit" style="padding-top: 30px">
         <i class="el-icon-picture-outline" style="float: left;font-size:30px; margin-top: 33px; margin-right:10px"></i>
         <h3 style="float: left;margin-top:35px">头像：</h3>
@@ -62,8 +62,6 @@
 </template>
 
 <script>
-  import TopTools from "./TopTools";
-  import Aside from "./Aside";
   export default {
     name: "UserInfo",
     created() {
@@ -78,7 +76,6 @@
 
        */
     },
-    components: {Aside, TopTools},
     data(){
       return{
         ruleForm: {

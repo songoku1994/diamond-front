@@ -48,6 +48,10 @@ export default new Router({
           path:'userfile',
           component:()=>import('../components/UserFile')
         },
+        {
+          path:'editfile',
+          component:()=>import('../components/Editfile')
+        }
       ]
     },
 

@@ -8,7 +8,7 @@
         @close="handleClose">
         <div class="block"></div>
         <div id="test">
-          <el-menu-item v-for="(item,i) in name" :key="i" :index="i" @click="handle(item.url)">
+          <el-menu-item v-for="(item,i) in name" :key="i" :index="item.id" @click="handle(item.url)">
             <i :class="item.icon"></i>
             <span slot="title">{{item.title}}</span>
           </el-menu-item>
@@ -33,17 +33,13 @@
 <script>
   export default {
     name: "Aside",
-    props: {
-      active: String,
-      isson: String,
-    },
     data() {
       return{
         name: [
           {icon: "el-icon-edit", title: "工作台", url:'/tools/home'},
-          {icon: "el-icon-share", title: "啦啦啦啦", url:'/tools/home1'},
-          {icon: "el-icon-delete", title: "导航三", url:'/tools/home2'},
-          {icon: "el-icon-user", title: "导航四", url:'/tools/home3'},
+          {icon: "el-icon-share", title: "啦啦啦啦", url:'/tools/home'},
+          {icon: "el-icon-delete", title: "导航三", url:'/tools/home'},
+          {icon: "el-icon-user", title: "导航四", url:'/tools/home'},
         ],
         zone: [
           {icon: "el-icon-edit", title: "个人信息", url:'/tools/userinfo', id:"4-1"},

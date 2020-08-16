@@ -4,37 +4,27 @@
       <div class="info" style="vertical-align: center;">
         <h1 style="float: left">我的回收站</h1>
       </div>
-      <div class="info" style="border-bottom:2px solid #CCC;padding-top: 100px;margin-right:100px"></div>
-      <div style="display: flex" align="center">
-        <el-table :data="BinData" stripe>
-        <el-table-column prop="Name" label="文件名" width="200"></el-table-column>
+      <div class="info" style="border-bottom:2px solid #CCC;padding-top: 100px;"></div>
+      <div class="info">
+        <el-table :data="BinData" stripe border>
+        <el-table-column prop="Name" label="文件名" width="220"></el-table-column>
         <el-table-column prop="DeleteDate" label="删除日期" width="200"></el-table-column>
-        <el-table-column
-          width="120">
-          <template slot-scope="scope">
-            <el-button @click="Recover(scope.row)" type="text" size="small">恢复</el-button>
-          </template>
+        <el-table-column>
+          <el-button-group slot-scope="scope">
+            <el-button @click="Recover(scope.row)" type="primary" size="small" style="width: 80px">恢复</el-button>
+            <el-button @click="MoreMessage(scope.row)" type="info" size="small" style="width: 80px">详情</el-button>
+            <el-button @click="FinalDelete(scope.row)" type="danger" size="small" style="width: 80px">彻底删除</el-button>
+          </el-button-group>
         </el-table-column>
-          <el-table-column
-            width="120">
-            <template slot-scope="scope">
-              <el-button @click="FinalDelete(scope.row)" type="text" size="small">彻底删除</el-button>
-            </template>
-          </el-table-column>
-          <el-table-column
-            width="120">
-            <template slot-scope="scope">
-              <el-button @click="MoreMessage(scope.row)" type="text" size="small">详情</el-button>
-            </template>
-          </el-table-column>
       </el-table>
       </div>
       <br>
       <div style="display: flex">
         <div style="flex: 1"></div>
-        <el-button type="primary" style="right: 50px" @click="AllRecover" icon="el-icon-refresh-right">全部恢复</el-button>
-        <el-button type="primary" style="left: 50px" @click="AllDelete" icon="el-icon-delete-solid">全部删除</el-button>
-        <div v-for="i in 35">&nbsp;</div>
+        <el-button-group>
+          <el-button type="primary" @click="AllRecover" icon="el-icon-refresh-right">全部恢复</el-button>
+          <el-button type="primary" @click="AllDelete" icon="el-icon-delete-solid">全部删除</el-button>
+        </el-button-group>
       </div>
     </div>
     <el-dialog
@@ -54,8 +44,6 @@
 </template>
 
 <script>
-    import TopTools from "./TopTools";
-    import Aside from "./Aside";
     export default {
       name: "Bin",
       created() {
@@ -220,7 +208,6 @@
           });
         },
     },
-      components: {Aside, TopTools}
     }
 </script>
 
@@ -228,9 +215,4 @@
   .info{
     margin-left: 8%;
   }
-  .edit_button {
-    margin-top: 25px;
-    margin-left: 20px;
-  }
-
 </style>
