@@ -50,6 +50,17 @@
       <div style="margin-top: 30px">团队信息:</div>
       <el-input placeholder="请输入团队信息" :rows="10" v-model="NewTeamData.MoreMessage" style="width: 80%;margin-top: 15px" type="textarea"></el-input>
       <span slot="footer" class="dialog-footer">
+        <el-upload
+          class="avatar-uploader"
+          action
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :on-change="changefile"
+          :file-list="fileList"
+          :before-upload="beforeAvatarUpload">
+              <img v-if="imageUrl" :src="imageUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
       <el-button @click="NewMessageVisible=false">取 消</el-button>
       <el-button type="primary" @click="SubmitNewTeam(NewTeamData)">确 定</el-button>
   </span>
@@ -58,10 +69,62 @@
 </template>
 
 <script>
-    export default {
-        name: "UserTeam",
-      created() {
-        /*这里写后端代码（初始化）
+  import axios from 'axios'
+  export default {
+    name: "UserTeam",
+    created() {
+
+    },
+    data(){
+      return{
+        TeamData:[
+          {TeamName:'大北航帝国',MoreMessage:'我大北航帝国科学技术世界第一',TeamId:1},
+          {TeamName:'大士谔书院',MoreMessage:'我大士谔书院科学技术世界第一',TeamId:2},
+          {TeamName:'大软件学院',MoreMessage:'我大软件书院科学技术世界第一',TeamId:3},
+          {TeamName:'大熊猫',MoreMessage:'我大熊猫科学技术世界第一',TeamId:4},
+        ],
+        ShowMessageVisible:false,
+        ShowData:{name:'',MoreMessage:''},
+        NewTeamData:{name:'',MoreMessage:''},
+        NewMessageVisible:false,
+        ButtonVisible:false,
+        image:null,
+        fileList:[],
+        imageUrl:'',
+      }
+    },
+    watch:{
+      fileList(){
+        console.log(this.fileList)
+      }
+    },
+    methods:{
+      changefile(file){
+        this.fileList.push(file)
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
+      },
+      handleAvatarSuccess(res, file) {
+        this.ruleForm.image = URL.createObjectURL(file.raw);
+        console.log("aaaaa");
+      },
+      Quit(index){
+        this.$confirm('此操作将退出团队, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          /*这里写后端代码（退出团队）
 
 
 
@@ -71,83 +134,68 @@
 
 
          */
-      },
-      data(){
-          return{
-            TeamData:[
-              {TeamName:'大北航帝国',MoreMessage:'我大北航帝国科学技术世界第一',TeamId:1},
-              {TeamName:'大士谔书院',MoreMessage:'我大士谔书院科学技术世界第一',TeamId:2},
-              {TeamName:'大软件学院',MoreMessage:'我大软件书院科学技术世界第一',TeamId:3},
-              {TeamName:'大熊猫',MoreMessage:'我大熊猫科学技术世界第一',TeamId:4},
-            ],
-            ShowMessageVisible:false,
-            ShowData:{name:'',MoreMessage:''},
-            NewTeamData:{name:'',MoreMessage:''},
-            NewMessageVisible:false,
-            ButtonVisible:false,
-          }
-      },
-      methods:{
-        Quit(index){
-            this.$confirm('此操作将退出团队, 是否继续?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              /*这里写后端代码（退出团队）
-
-
-
-
-
-
-
-
-             */
-              this.TeamData.splice(index,1)
-              this.$message({
-                type: 'success',
-                message: '退出成功!'
-              });
-            }).catch(() => {
-              this.$message({
-                type: 'info',
-                message: '已取消'
-              });
-            });
-          },
-        MoreMessage(index){
-          this.ShowMessageVisible=true
-          this.ShowData.name=this.TeamData[index].name
-          this.ShowData.MoreMessage=this.TeamData[index].MoreMessage
-          return 0
-        },
-        NewTeam(){
-          this.NewTeamData.name=''
-          this.NewTeamData.MoreMessage=''
-          this.NewMessageVisible=true
-        },
-        SubmitNewTeam(NewTeamData){
-          this.TeamData.push(NewTeamData)
-          this.NewMessageVisible=false
+          this.TeamData.splice(index,1)
           this.$message({
-            type:"success",
-            message:'创建成功',
-          })
-        },
-        ShowMore(object){
-          object.name(object.data)
-        },
-        Jump(index){
-          this.$router.push({
-            path:'/tools/teammanage/',
-            query:{
-              Team:this.TeamData[index]
-            }
-          })
-        },
-      }
+            type: 'success',
+            message: '退出成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });
+        });
+      },
+      MoreMessage(index){
+        this.ShowMessageVisible=true
+        this.ShowData.name=this.TeamData[index].name
+        this.ShowData.MoreMessage=this.TeamData[index].MoreMessage
+        return 0
+      },
+      NewTeam(){
+        this.NewTeamData.name=''
+        this.NewTeamData.MoreMessage=''
+        this.NewMessageVisible=true
+      },
+      SubmitNewTeam(NewTeamData){
+        let formData = new FormData();
+        formData.append('name', this.$store.state.name,);
+        formData.append( 'token',this.$store.state.token);
+        formData.append('tname',this.NewTeamData.name);
+        formData.append('tintro',this.NewTeamData.MoreMessage);
+        formData.append('tphoto',this.fileList[this.fileList.length-1].raw);
+        let config = {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+        axios.post('http://127.0.0.1:8000/createTeam',formData,config).then(res =>
+        {
+          console.log(res)
+        })
+        // then(res=>{
+        //   console.log(res)
+        //   this.TeamData.push(NewTeamData)
+        //   this.NewMessageVisible=false
+        //   this.$message({
+        //     type:"success",
+        //     message:'创建成功',
+        //   })
+        // })
+      },
+      ShowMore(object){
+        object.name(object.data)
+      },
+      Jump(index){
+        this.$router.push({
+          path:'/tools/teammanage/',
+          query:{
+            Team:this.TeamData[index]
+          }
+        })
+      },
     }
+  }
 </script>
 
 <style scoped>

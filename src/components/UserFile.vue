@@ -7,8 +7,7 @@
     <div >
       <el-table :data="AllFile" stripe border>
         <el-table-column prop="Title" label="文件名" ></el-table-column>
-        <el-table-column prop="Author" label="作者"></el-table-column>
-        <el-table-column prop="LastViewDate" label="上次浏览日期" ></el-table-column>
+        <el-table-column prop="LastViewDate" label="上次编辑日期" ></el-table-column>
         <el-table-column prop="CreateDate" label="创建日期"></el-table-column>
         <el-table-column width="170">
           <template slot-scope="scope">
@@ -26,6 +25,7 @@
                    :article-authority="SelectArticle.Authority"
                    :revise="SelectArticle.Revise"
                    :aid="SelectArticle.aid"
+                   :able-to-edit="true"
                    @cancel="ConfigOldFileVisible=false"></ConfigOldFile>
   </div>
 </template>
@@ -50,7 +50,7 @@
         {
           console.log(typeof a.fields.title)
           let obj = {}
-          obj.LastViewDate = '2020/8/11 18:10'
+          obj.LastViewDate = this.TimeFormat(a.fields.lastedittime)
           obj.CreateDate = this.TimeFormat(a.fields.createtime)
           obj.Author = this.$store.state.name
           obj.aid = a.pk

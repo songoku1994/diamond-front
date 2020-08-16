@@ -88,6 +88,7 @@ const routes= [
           requireAuth:true
         }
       },
+
       {
         path:'searchfile',
         component:()=>import('../components/SearchFile'),
@@ -155,30 +156,30 @@ const router = new VueRouter(
 
 router.beforeEach(
   (to,from,next)=>{
-      if(to.meta.requireAuth){
-        axios({
-          url:"http://127.0.0.1:8000/Authentication",
-          methods: "get",
-          params:{
-            name:store.state.name,
-            token:store.state.token
-          }
-        }).then(res =>{
-          console.log(res)
-            if(res.data.state === 1)
-            {
-                document.title=to.meta.title
-                next()
+    if(to.meta.requireAuth){
+      axios({
+        url:"http://127.0.0.1:8000/Authentication",
+        methods: "get",
+        params:{
+          name:store.state.name,
+          token:store.state.token
+        }
+      }).then(res =>{
+        console.log(res)
+        if(res.data.state === 1)
+        {
+          document.title=to.meta.title
+          next()
 
-            }else{
-              alert("认证过期，重新登录!")
-            }
-        })
+        }else{
+          alert("认证过期，重新登录!")
+        }
+      })
 
-      }else{
-        document.title=to.meta.title
-        next()
-      }
+    }else{
+      document.title=to.meta.title
+      next()
+    }
   }
 )
 

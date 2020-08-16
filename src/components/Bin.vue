@@ -9,10 +9,11 @@
         <el-table-column prop="fields.title" label="文件名"></el-table-column>
         <el-table-column prop="fields.lastedittime" label="上次编辑日期"></el-table-column>
         <el-table-column prop="fields.createtime" label="创建日期"></el-table-column>
-        <el-table-column width="217">
+        <el-table-column width="170">
           <el-button-group slot-scope="scope" >
-            <el-button type="primary" @click="Recover(scope.$index)">恢复文件</el-button>
-            <el-button type="danger" @click="FinalDelete(scope.$index)">彻底删除</el-button>
+            <el-button type="primary" @click="Recover(scope.$index)" circle icon="el-icon-refresh-right"></el-button>
+            <el-button type="primary" @click="MoreMessage(scope.$index)" circle icon="el-icon-info"></el-button>
+            <el-button type="danger" @click="FinalDelete(scope.$index)" circle icon="el-icon-delete"></el-button>
           </el-button-group>
         </el-table-column>
       </el-table>
@@ -21,13 +22,24 @@
       <el-button type="primary" @click="AllRecover">全部恢复</el-button>
       <el-button type="danger" @click="AllDelete">全部删除</el-button>
     </div>
+    <ConfigOldFile v-if="BinFileVisible"
+                   :visible.sync="BinFileVisible"
+                   :title="SelectArticle.fields.title"
+                   :simple-message="SelectArticle.fields.message"
+                   :article-authority="SelectArticle.fields.visibility"
+                   :revise="SelectArticle.fields.commentGranted===true?1:0"
+                   :aid="SelectArticle.pk"
+                   :able-to-edit="false"
+                   @cancel="BinFileVisible=false"></ConfigOldFile>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import ConfigOldFile from "./ConfigOldFile";
 export default {
   name: "Bin",
+  components:{ConfigOldFile},
   created() {
     axios({
       url:'/getAbandonedArticle',
@@ -47,6 +59,8 @@ export default {
   },
   data(){
     return{
+      BinFileVisible:false,
+      SelectArticle:{},
       BinData:[],
       ShowData:'',
       ShowMessage:'嘤嘤嘤',
@@ -113,18 +127,10 @@ export default {
       });
     },
     MoreMessage(index){
-      /*这里写后端代码（查看详情信息）
-      将this.ShowMessage的值变为this.BinData[index]的详情信息
-
-
-
-
-
-
-
-       */
-      this.ShowData=this.BinData[index]
-      this.DialogVisible=true
+      console.log(index)
+      this.SelectArticle=this.BinData[index]
+      console.log(this.SelectArticle)
+      this.BinFileVisible=true
     },
     AllDelete(){
       this.$confirm('此操作将删除所有文档, 是否继续?', '提示', {
