@@ -87,15 +87,73 @@ const routes= [
           title:"我的文档-金刚石文档",
           requireAuth:true
         }
+      },
+
+      {
+        path:'searchfile',
+        component:()=>import('../components/SearchFile'),
+        meta:{
+          title:"我的文档-金刚石文档",
+          requireAuth:true
+        }
+      },
+      {
+        path:'usercollection',
+        component:()=>import('../components/UserCollection'),
+        meta:{
+          title:"我的文档-金刚石文档",
+          requireAuth:true
+        }
+      },
+      {
+        path:'ownfile',
+        component:()=>import('../components/ownfile'),
+        meta:{
+          title:"我的文档-金刚石文档",
+          requireAuth:true
+        }
+      },
+      {
+        path:'worktrend',
+        component:()=>import('../components/Worktrend'),
+        meta:{
+          title:"我的文档-金刚石文档",
+          requireAuth:true
+        }
+      },
+      {
+        path:'teammanage',
+        component:()=>import('../components/TeamManage'),
+        meta:{
+          title:"我的文档-金刚石文档",
+          requireAuth:true
+        }
+      },
+      {
+        path:'teammanage/:team',
+        component:()=>import('../components/TeamManage'),
+        meta:{
+          title:"我的文档-金刚石文档",
+          requireAuth:true
+        }
+      },
+      {
+        path:'teammanage/:team',
+        component:()=>import('../components/TeamManage'),
+        meta:{
+          title:"我的文档-金刚石文档",
+          requireAuth:true
+        }
+      },
+      {
+        path:'viewfile/:id',
+        component:()=>import('../components/ViewFile'),
+        meta:{
+          title:"我的文档-金刚石文档",
+          requireAuth:true
+        }
       }
     ]
-  },
-  {
-    path:'/test',
-    component:()=>import('../components/test1'),
-    meta:{
-      title:"测试"
-    }
   },
 
 ]
@@ -106,30 +164,30 @@ const router = new VueRouter(
 
 router.beforeEach(
   (to,from,next)=>{
-      if(to.meta.requireAuth){
-        axios({
-          url:"http://127.0.0.1:8000/Authentication",
-          methods: "get",
-          params:{
-            name:store.state.name,
-            token:store.state.token
-          }
-        }).then(res =>{
-          console.log(res)
-            if(res.data.state === 1)
-            {
-                document.title=to.meta.title
-                next()
+    if(to.meta.requireAuth){
+      axios({
+        url:"http://127.0.0.1:8000/Authentication",
+        methods: "get",
+        params:{
+          name:store.state.name,
+          token:store.state.token
+        }
+      }).then(res =>{
+        console.log(res)
+        if(res.data.state === 1)
+        {
+          document.title=to.meta.title
+          next()
 
-            }else{
-              alert("认证过期，重新登录!")
-            }
-        })
+        }else{
+          alert("认证过期，重新登录!")
+        }
+      })
 
-      }else{
-        document.title=to.meta.title
-        next()
-      }
+    }else{
+      document.title=to.meta.title
+      next()
+    }
   }
 )
 

@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "element-ui": "^2.13.2",
+    "quill-image-drop-module": "^1.0.3",
+    "quill-image-resize-module": "^3.0.0",
     "vue": "^2.5.2",
     "vue-cookies": "^1.7.3",
     "vue-quill-editor": "^3.0.6",
