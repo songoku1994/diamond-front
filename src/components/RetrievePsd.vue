@@ -18,65 +18,11 @@
           </el-col>
         </el-row>
         <el-row
-          type="flex"
-          justify="center"
-          align="middle"
-          v-if="state === 'step1'"
-        >
-          <el-col style="height: 9cm;width: 10cm;">
-            <div class="card2" style="border-radius: 25px; margin:0 auto">
-              <el-row>
-                <h2 align="center">用户注册</h2>
-              </el-row>
-              <el-row type="flex" justify="center">
-                <el-col :span="14">
-                  <el-input
-                    placeholder="请输入用户名"
-                    v-model="username"
-                    clearable
-                  >
-                  </el-input>
-                </el-col>
-              </el-row>
-              <el-row type="flex" justify="center">
-                <el-col :span="14">
-                  <el-input
-                    placeholder="请输入密码"
-                    v-model="password"
-                    show-password
-                  >
-                  </el-input>
-                </el-col>
-              </el-row>
-              <el-row type="flex" justify="center">
-                <el-col :span="14">
-                  <el-input
-                    placeholder="请确认密码"
-                    v-model="password2"
-                    show-password
-                  >
-                  </el-input>
-                </el-col>
-              </el-row>
-              <el-row type="flex" justify="center">
-                <el-col :span="6">
-                  <el-button
-                    type="primary"
-                    style="width: 100%;"
-                    @click="next1()"
-                    >下一步
-                  </el-button>
-                </el-col>
-              </el-row>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row
           style="text-align: center;"
           type="flex"
           justify="center"
           align="middle"
-          v-if="state === 'step2'"
+          v-if="state === 'step1'"
         >
           <el-col :offset="7">
             <div class="card2" style="border-radius: 25px; margin:0 auto">
@@ -111,8 +57,56 @@
                     type="success"
                     icon="el-icon-check"
                     circle
-                    @click.stop="next2()"
+                    @click="next1()"
                   ></el-button>
+                </el-col>
+              </el-row>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row
+          style="text-align: center;"
+          type="flex"
+          justify="center"
+          align="middle"
+          v-if="state === 'step2'"
+        >
+          <el-col :offset="7">
+            <div class="card2" style="border-radius: 25px; margin:0 auto">
+              <el-row>
+                <h2 align="center">更改密码</h2>
+              </el-row>
+              <el-row type="flex" justify="center">
+                <el-col :span="14"> </el-col>
+              </el-row>
+              <el-row type="flex" justify="center">
+                <el-col :span="14">
+                  <el-input
+                    placeholder="请输入新密码"
+                    v-model="password"
+                    show-password
+                  >
+                  </el-input>
+                </el-col>
+              </el-row>
+              <el-row type="flex" justify="center">
+                <el-col :span="14">
+                  <el-input
+                    placeholder="请确认新密码"
+                    v-model="password2"
+                    show-password
+                  >
+                  </el-input>
+                </el-col>
+              </el-row>
+              <el-row type="flex" justify="center">
+                <el-col :span="6">
+                  <el-button
+                    type="primary"
+                    style="width: 100%;"
+                    @click="next2()"
+                    >下一步
+                  </el-button>
                 </el-col>
               </el-row>
             </div>
@@ -128,7 +122,7 @@
           <el-col :offset="7">
             <div class="card2" style="border-radius: 25px; margin:0 auto">
               <el-row>
-                <h2 align="center">用户注册成功</h2>
+                <h2 align="center">密码修改成功</h2>
               </el-row>
               <el-row type="flex" justify="center">
                 <el-col :span="10">
@@ -152,7 +146,7 @@
 import App from "../App";
 import axios from "axios";
 export default {
-  name: "login",
+  name: "retrievepsd",
   data() {
     return {
       username: "",
@@ -163,7 +157,7 @@ export default {
       state: "step1",
       str: "",
       psd: "",
-      news: ""
+      str2: ""
     };
   },
   methods: {
@@ -183,11 +177,6 @@ export default {
         return false;
       }
     },
-    judgeUserName(name) {
-      if (name === "") return false;
-      else if (name.length > 10) return false;
-      return true;
-    },
     judgeRepassword() {
       return this.password === this.password2;
     },
@@ -196,14 +185,8 @@ export default {
       const reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
       return reg.test(mail);
     },
-    next1() {
-      if (!this.judgeUserName(this.username)) {
-        this.$message({
-          showClose: true,
-          message: "用户名不能为空！",
-          type: "error"
-        });
-      } else if (!this.judgePassword(this.password)) {
+    next2() {
+      if (!this.judgePassword(this.password)) {
         this.$message({
           showClose: true,
           message: "密码必须不少于八位，且不能是纯数字或字母！",
@@ -217,52 +200,55 @@ export default {
         });
       } else {
         axios({
-          url: "http://127.0.0.1:8000/judgeRepetitiveUserName",
+          url: "http://127.0.0.1:8000/changePasswordByEmail",
           methods: "get",
           params: {
-            name: this.username
+            email: this.email,
+            newpassword: this.password
           }
         }).then(response => {
           console.log(response);
-          if (response.data.state === 1) {
-            this.active++;
-            this.state = "step2";
-          } else {
-            this.$message({
-              showClose: true,
-              message: "该用户已被注册",
-              type: "error"
-            });
-          }
+          this.active++;
+          this.state = "step3";
+          this.$message({
+            showClose: true,
+            message: "密码修改成功",
+            type: "success"
+          });
         });
       }
     },
-    next2() {
+    next1() {
       if (this.psd === this.str) {
         this.active++;
-        this.state = "step3";
-        let formData = new FormData();
-        formData.append("name", this.username);
-        formData.append("email", this.email);
-        formData.append("password", this.password);
-        let config = {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
-        };
-        axios
-          .post("http://127.0.0.1:8000/register", formData, config)
-          .then(res => {
-            this.$message({
-              showClose: true,
-              message: "注册成功！",
-              type: res.data.state === 1 ? "success" : "error"
-            });
-            if (res.data.state === 1) {
-              this.active++;
-              this.state = "step3";
-            }
-          });
+        this.state = "step2";
+        // let formData = new FormData();
+        // formData.append("name", this.username);
+        // formData.append("email", this.email);
+        // formData.append("password", this.password);
+        // let config = {
+        //   headers: {
+        //     "Content-Type": "multipart/form-data"
+        //   }
+        // };
+        // axios
+        //   .post("http://127.0.0.1:8000/register", formData, config)
+        //   .then(res => {
+        //     this.$message({
+        //       showClose: true,
+        //       message: res.data.msg,
+        //       type: res.data.state === 1 ? "success" : "error"
+        //     });
+        //     if (res.data.state === 1) {
+        //       this.$router.push({
+        //         path: "/login",
+        //         query: {
+        //           username: this.username,
+        //           password: this.password
+        //         }
+        //       });
+        //     }
+        //   });
       } else {
         this.$message({
           showClose: true,
@@ -271,68 +257,9 @@ export default {
         });
       }
     },
-    doSubmit() {
-      if (!this.judgeUserName(this.username)) {
-        this.$message({
-          showClose: true,
-          message: "用户名不能为空！",
-          type: "error"
-        });
-      } else if (!this.judgePassword(this.password)) {
-        this.$message({
-          showClose: true,
-          message: "密码必须不少于八位，且不能是纯数字或字母！",
-          type: "error"
-        });
-      } else if (!this.judgeRepassword()) {
-        this.$message({
-          showClose: true,
-          message: "两次密码输入必须一致！",
-          type: "error"
-        });
-      } else if (!this.judgeEmail()) {
-        this.$message({
-          showClose: true,
-          message: "邮箱输入不合法！",
-          type: "error"
-        });
-      } else {
-        let formData = new FormData();
-        formData.append("name", this.username);
-        formData.append("email", this.email);
-        formData.append("password", this.password);
-        let config = {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
-        };
-        axios
-          .post("http://127.0.0.1:8000/register", formData, config)
-          .then(res => {
-            this.$message({
-              showClose: true,
-              message: res.data.msg,
-              type: res.data.state === 1 ? "success" : "error"
-            });
-            if (res.data.state === 1) {
-              this.$router.push({
-                path: "/login",
-                query: {
-                  username: this.username,
-                  password: this.password
-                }
-              });
-            }
-          });
-      }
-    },
     tologin() {
       this.$router.push({
-        path: "/login",
-        query: {
-          username: this.username,
-          password: this.password
-        }
+        path: "/login"
       });
     },
     subEmail() {
@@ -351,7 +278,7 @@ export default {
           }
         }).then(response => {
           console.log(response);
-          if (response.data.state === 1) {
+          if (response.data.state === 0) {
             this.$message({
               showClose: true,
               message: "验证码已发送",
@@ -372,7 +299,7 @@ export default {
             this.news =
               "【金刚石文档】验证码：" +
               this.str +
-              "，您正在注册金刚石文档账号（若非本人操作，请忽略或删除本邮件）";
+              "，您正在找回金刚石文档账号密码（若非本人操作，请忽略或删除本邮件）";
             axios({
               url: "http://127.0.0.1:8000/check_mail",
               method: "get",
@@ -385,7 +312,7 @@ export default {
           } else {
             this.$message({
               showClose: true,
-              message: "该邮箱已被注册",
+              message: "该邮箱未被注册",
               type: "error"
             });
           }
@@ -423,7 +350,7 @@ export default {
 .card2 {
   height: 9cm;
   width: 10cm;
-  background-color: #ffffffa6;
+  background-color: #ffffffbd;
   display: table-cell;
   vertical-align: middle;
 }

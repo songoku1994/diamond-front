@@ -9,18 +9,18 @@
         <el-table-column prop="fields.title" label="文件名"></el-table-column>
         <el-table-column prop="fields.lastedittime" label="上次编辑日期"></el-table-column>
         <el-table-column prop="fields.createtime" label="创建日期"></el-table-column>
-        <el-table-column width="170">
-          <el-button-group slot-scope="scope" >
+        <el-table-column width="170" >
+          <template slot-scope="scope">
             <el-button type="primary" @click="Recover(scope.$index)" circle icon="el-icon-refresh-right"></el-button>
-            <el-button type="primary" @click="MoreMessage(scope.$index)" circle icon="el-icon-info"></el-button>
+            <el-button type="info" @click="MoreMessage(scope.$index)" circle icon="el-icon-info"></el-button>
             <el-button type="danger" @click="FinalDelete(scope.$index)" circle icon="el-icon-delete"></el-button>
-          </el-button-group>
+          </template>
         </el-table-column>
       </el-table>
     </div>
     <div style="float: right;margin-top: 30px">
-      <el-button type="primary" @click="AllRecover">全部恢复</el-button>
-      <el-button type="danger" @click="AllDelete">全部删除</el-button>
+      <el-button v-if="BinData.length>1" type="primary" @click="AllRecover">全部恢复</el-button>
+      <el-button v-if="BinData.length>1" type="danger" @click="AllDelete">全部删除</el-button>
     </div>
     <ConfigOldFile v-if="BinFileVisible"
                    :visible.sync="BinFileVisible"

@@ -23,6 +23,10 @@ const routes= [
   {
     path:'/login/:user',
     component:()=>import('../components/Login'),
+    meta:{
+      title:"我的文档-金刚石文档",
+      requireAuth:true
+    }
   },
   {
     path:'/register',
@@ -58,7 +62,11 @@ const routes= [
       },
       {
         path:'bin',
-        component:()=>import('../components/Bin')
+        component:()=>import('../components/Bin'),
+        meta:{
+          title:"我的文档-金刚石文档",
+          requireAuth:true
+        }
       },
       {
         path:'usermessage',
@@ -78,7 +86,11 @@ const routes= [
       },
       {
         path:'userfile',
-        component:()=>import('../components/UserFile')
+        component:()=>import('../components/UserFile'),
+        meta:{
+          title:"我的文档-金刚石文档",
+          requireAuth:true
+        }
       },
       {
         path:'editfile',
@@ -114,14 +126,6 @@ const routes= [
         }
       },
       {
-        path:'worktrend',
-        component:()=>import('../components/Worktrend'),
-        meta:{
-          title:"我的文档-金刚石文档",
-          requireAuth:true
-        }
-      },
-      {
         path:'teammanage',
         component:()=>import('../components/TeamManage'),
         meta:{
@@ -138,7 +142,15 @@ const routes= [
         }
       },
       {
-        path:'viewfile',
+        path:'teammanage/:team',
+        component:()=>import('../components/TeamManage'),
+        meta:{
+          title:"我的文档-金刚石文档",
+          requireAuth:true
+        }
+      },
+      {
+        path:'viewfile/:id',
         component:()=>import('../components/ViewFile'),
         meta:{
           title:"我的文档-金刚石文档",
@@ -173,6 +185,7 @@ router.beforeEach(
 
         }else{
           alert("认证过期，重新登录!")
+            store.commit("logout")
         }
       })
 

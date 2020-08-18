@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog title="新建文档" v-if="Visible" :visible.sync="Visible" width="490px" top="5vh" :show-close="false">
+    <el-dialog title="新建文档" v-if="Visible" :visible.sync="Visible" width="490px" top="5vh" :show-close="false" :close-on-click-modal="false">
       <div style="width: 80%">
         文档标题:<br><br>
         <el-input placeholder="请输入标题" v-model="NewFile.Title"></el-input>
@@ -14,11 +14,20 @@
         <div>权限:</div>
         <div>
           <el-select v-model="NewFile.Authority">
-            <el-option v-for="(i,index) in Authority" :label="i" :value="index">{{i}}</el-option>
+            <el-option v-for="(i,index) in Authority" :label="i" :value="index" v-if="index===0||index>2">{{i}}</el-option>
           </el-select>
           <el-select v-model="NewFile.Revise" v-if="NewFile.Authority!==0">
             <el-option label="不可评论" :value="0">不可评论</el-option>
             <el-option label="可评论" :value="1">可评论</el-option>
+          </el-select>
+        </div>
+        <div style="margin-top: 20px">
+          <div>模板</div>
+          <el-select v-model="Template">
+            <el-option label="空白模板" :value="0">空白模板</el-option>
+            <el-option label="模板一" :value="1">模板一</el-option>
+            <el-option label="模板二" :value="2">模板二</el-option>
+            <el-option label="模板三" :value="3">模板三</el-option>
           </el-select>
         </div>
       </div>
@@ -38,7 +47,8 @@ export default {
   data(){
     return{
       NewFile:{Title:'',SimpleMessage:'',TeamId:-1,Authority:0,Revise:0,aid:-1},
-      Authority:['仅自己','所有人可见','所有人可编辑'],
+      Authority:['仅自己','','','所有人可见','所有人可编辑'],
+      Template:0
     }
   },
   methods:{
@@ -51,14 +61,17 @@ export default {
         })
         return
       }
+      console.log(111222333)
       axios.get('http://127.0.0.1:8000/judgeRepetitiveArticleName',{params:{
           name:this.$store.state.name,
           token:this.$store.state.token,
           tid:this.NewFile.TeamId,
-          title:this.NewFile.Title
+          title:this.NewFile.Title,
+          aid:-1
         }}
       ).then(res=>{
         // isRepetitiveArticleName
+        // console.log(res)
         if(res.data.isRepetitiveArticleName===true){
           this.$message({type:"error",message:'已有同名标题'})
           return
@@ -67,7 +80,10 @@ export default {
         console.log(this.NewFile)
         this.$router.push({
           path:'/tools/editfile',
-          query:{NewFile:this.NewFile}
+          query:{
+            NewFile:JSON.stringify(this.NewFile),
+            Template:JSON.stringify(this.Template)
+          }
         })
       }).catch(res=>{
         this.$message({type:"warning",message:res})

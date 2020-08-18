@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog title="新建文档" v-if="visible" :visible.sync="visible" width="490px" top="5vh" :show-close="false">
+    <el-dialog title="新建文档" v-if="visible" :visible.sync="visible" width="490px" top="5vh" :show-close="false" :close-on-click-modal="false">
       <div style="width: 80%">
         文档标题:<br><br>
         <el-input placeholder="请输入标题" v-model="NewTeamFile.Title"></el-input>
@@ -12,8 +12,8 @@
       <br><br>
       <div>所属团队:</div><br>
       <div>
-        <el-select v-model="NewTeamFile.TeamId" disabled>
-          <el-option :label="NewTeamFile.TeamName" :value="NewTeamFile.TeamId">{{NewTeamFile.TeamName}}</el-option>
+        <el-select v-model="NewTeamFile.TeamName" disabled>
+          <el-option :label="TeamName" :value="TeamName">{{TeamName}}</el-option>
         </el-select>
       </div>
       <br>
@@ -26,6 +26,15 @@
           <el-select v-model="NewTeamFile.Revise" v-if="NewTeamFile.Authority!==0">
             <el-option label="不可评论" :value="0">不可评论</el-option>
             <el-option label="可评论" :value="1">可评论</el-option>
+          </el-select>
+        </div>
+        <div style="margin-top: 20px">
+          <div>模板</div>
+          <el-select v-model="Template">
+            <el-option label="空白模板" :value="0">空白模板</el-option>
+            <el-option label="模板一" :value="1">模板一</el-option>
+            <el-option label="模板二" :value="2">模板二</el-option>
+            <el-option label="模板三" :value="3">模板三</el-option>
           </el-select>
         </div>
       </div>
@@ -41,11 +50,12 @@
   import axios from 'axios'
   export default {
     name: "NewTeamFile",
-    props:['visible','TeamId','TeamName'],
+    props:['visible','TeamId','TeamName','Team'],
     data(){
       return {
         NewTeamFile:{Title:null,SimpleMessage:null,TeamId:null,Authority:0,Revise:0,TeamName:'',aid:-1},
         Authority:['仅自己','团队成员可见','团队成员可编辑','所有人可见','所有人可编辑'],
+        Template:0,
       }
     },
     created() {
@@ -70,7 +80,8 @@
             name:this.$store.state.name,
             token:this.$store.state.token,
             tid:this.NewTeamFile.TeamId,
-            title:this.NewTeamFile.Title
+            title:this.NewTeamFile.Title,
+            aid:-1
           }}
         ).then(res=>{
           // isRepetitiveArticleName
@@ -82,7 +93,11 @@
           console.log(this.NewTeamFile)
           this.$router.push({
             path:'/tools/editfile',
-            query:{NewTeamFile:this.NewTeamFile}
+            query:{
+              NewFile:JSON.stringify(this.NewTeamFile),
+              Team:JSON.stringify(this.Team),
+              Template:JSON.stringify(this.Template)
+            }
           })
         }).catch(res=>{
           this.$message({type:"warning",message:res})

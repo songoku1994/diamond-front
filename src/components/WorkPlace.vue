@@ -20,7 +20,6 @@
           {icon: "el-icon-edit", title: "最近浏览", url:'/tools/home',id:"1"},
           {icon: "el-icon-share", title: "我创建的", url:'/tools/ownfile',id:"2"},
           {icon: "el-icon-delete", title: "我的收藏", url:'/tools/usercollection',id:"3"},
-          {icon: "el-icon-user", title: "工作动态", url:'/tools/worktrend',id:"4"},
         ],
         activeIndex: this.active,
       }

@@ -9,10 +9,9 @@
         <el-table-column prop="Title" label="文件名" ></el-table-column>
         <el-table-column prop="LastViewDate" label="上次编辑日期" ></el-table-column>
         <el-table-column prop="CreateDate" label="创建日期"></el-table-column>
-        <el-table-column width="170">
+        <el-table-column width="118">
           <template slot-scope="scope">
             <el-button type="primary" @click="EditFile(scope.$index)" icon="el-icon-edit" circle></el-button>
-            <el-button type="success" @click="CollectFile(scope.$index)" :icon="Star(scope.$index)" circle></el-button>
             <el-button type="danger" @click="DeleteFile(scope.$index)" icon="el-icon-delete" circle></el-button>
           </template>
         </el-table-column>

@@ -10,6 +10,7 @@
           @click="clickedit_info()"
         >修改信息</el-button
         >
+        <el-button v-show="!isEdit" class="edit_button" type="primary" @click="changePassword()">修改密码</el-button>
         <el-button
           class="edit_button"
           type="primary"
@@ -83,11 +84,12 @@
             ></el-input> -->
             <el-upload
               class="avatar-uploader"
-              action
-              :show-file-list="false"
+              action="http://127.0.0.1:8000/"
+              :show-file-list="true"
               :on-success="handleAvatarSuccess"
               :on-change="changefile"
               :file-list="fileList"
+              :limit="1"
               :before-upload="beforeAvatarUpload">
               <img v-if="imageUrl" :src="imageUrl" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -136,6 +138,43 @@
         </el-form>
       </div>
     </div>
+    <el-dialog
+      title="修改密码"
+      :visible.sync="dialogVisible"
+      :show-close="false"
+      :close-on-click-modal="false"
+      width="500px">
+      <el-form :model="commentForm" ref="commentForm" :rules="rules2">
+        <el-form-item label="原密码" prop="oldpasswd">
+          <el-input type="text"
+                    :row="4"
+                    placeholder="请输入原密码"
+                    v-model="commentForm.oldpasswd"
+                    show-password>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="新密码" prop="newpasswd">
+          <el-input type="text"
+                    :row="4"
+                    placeholder="请输入新密码"
+                    v-model="commentForm.newpasswd"
+                    show-password>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="确认新密码" prop="newpasswd2">
+          <el-input type="text"
+                    :row="4"
+                    placeholder="请重新输入一遍新密码"
+                    v-model="commentForm.newpasswd2"
+                    show-password>
+          </el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button @click="submitPasswd('commentForm')" type="primary">确 定</el-button>
+            </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -162,6 +201,23 @@ export default {
   },
   data() {
     return {
+      dialogVisible: false,
+      rules2: {
+          oldpasswd: [
+            {required: true, message: '原密码不能为空！', trigger: 'blur'},
+          ],
+          newpasswd: [
+            {required: true, message: '新密码不能为空！', trigger: 'blur'}
+          ],
+          newpasswd2: [
+            {required: true, message: '新密码不能为空！', trigger: 'blur'}
+          ]
+        },
+        commentForm: {
+          oldpasswd: "",
+          newpasswd: "",
+          newpasswd2: "",
+        },
       ruleForm: {
         image: this.Image,
         nick: this.Nick,
@@ -189,19 +245,79 @@ export default {
           { required: false },
         ]
       },
-      Username: "DarkShining",
-      Nick: "欧豆豆",
-      Sex: "男",
-      Birthday: "1999-11-26",
-      Email: "269096320@qq.com",
+      Username: "",
+      Nick: "",
+      Sex: "",
+      Birthday: "",
+      Email: "",
       isEdit: false,
-      Mood: "起飞",
-      Image: require("../assets/logo.png"),
+      Mood: "",
+      ImageUrl: require("../assets/logo.png"),
       fileList:[]
-
     };
   },
   methods: {
+    submitPasswd: function(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          let reg1 = new RegExp(/^[0-9A-Za-z]+$/);
+          let reg2 = new RegExp(/[A-Za-z].*[0-9]|[0-9].*[A-Za-z]/);
+          if(!reg1.test(this.commentForm.newpasswd) || !reg2.test(this.commentForm.newpasswd) || this.commentForm.newpasswd.length <8){
+            this.$message({
+              showClose: true,
+              message: "密码必须不少于八位，且不能是纯数字或字母！",
+              type: "error"
+            })
+          }
+          else if(this.commentForm.newpasswd != this.commentForm.newpasswd2){
+            this.$message({
+              showClose: true,
+              message: "两次输入的密码不一致！",
+              type: "error"
+            })
+          }
+          else {
+            axios({
+              url:"http://127.0.0.1:8000/changePassword",
+              method:"get",
+              params:{
+                name:this.$store.state.name,
+                token:this.$store.state.token,
+                password:this.commentForm.oldpasswd,
+                newpassword:this.commentForm.newpasswd,
+              }
+            }).then(res => {
+              console.log(res)
+              if(res.data.state == 1){
+                this.$alert("修改密码成功！三秒后跳转到登录界面")
+                setTimeout(() =>{
+                  this.$store.commit('logout',res)
+                },3000);
+              }
+              else if(res.data.state == 2){
+                this.$alert("修改密码失败！原密码错误")
+              }
+              else if(res.data.state == 3){
+                this.$alert("cookie过期了！")
+              }
+              else if(res.data.state == 4){
+                this.$alert("不存在这样的用户")
+              }
+              else if(res.data.state == 5){
+                this.$alert("发生了意料之外的错误")
+              }
+            })
+          }
+        } else {
+          this.$alert("数据格式错误")
+          return false;
+        }
+        this.dialogVisible = false;
+      });
+    }, //密码提交，修改密码
+    changePassword() {
+      this.dialogVisible = true;
+    },
     lll() {
       this.$router.push("/login");
     },
@@ -236,8 +352,25 @@ export default {
             .post("http://127.0.0.1:8000/changeUserInfo", formData, config)
             .then(res => {
               console.log(res);
-             this.$store.commit('changename',res)
-              location.reload()
+              if(res.data.state == 404){
+                this.$alert("用户名已存在！");
+              }
+              else if(res.data.state == 405){
+                this.$alert("邮箱已存在，请更换邮箱");
+              }
+              else if(res.data.state == 406){
+                this.$alert("cookie 过期了!");
+              }
+              else if(res.data.state == 407){
+                this.$alert("不存在这样的用户名！");
+              }
+              else if(res.data.state == 408){
+                this.$alert("出现了意料之外的错误");
+              }
+              else if(res.data.state == 1) {
+                this.$store.commit('changename', res)
+                location.reload()
+              }
             });
         } else {
           _this.$alert("修改信息失败", "数据格式错误");

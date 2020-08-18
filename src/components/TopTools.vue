@@ -7,7 +7,7 @@
       <div style="display: flex">
         <div><el-input placeholder="搜索文档" v-model="SearchInput" clearable suffix-icon="el-icon-search"></el-input></div>
         <div v-for="i in 4">&nbsp</div>
-        <div><el-button icon="el-icon-search" type="primary" @click="submitkey()">搜索</el-button></div>
+        <div><el-button icon="el-icon-search" type="primary" @click="SubmitKey()">搜索</el-button></div>
         <div v-for="i in 4">&nbsp</div>
         <div><el-button type="danger" icon="el-icon-error" @click="ClearCookie()">注销</el-button></div>
         <div v-for="i in 4">&nbsp</div>
@@ -17,6 +17,7 @@
 </template>
 
 <script>
+  import search from './SearchFile'
 export default {
   name: "TopTools",
   data(){
@@ -40,18 +41,13 @@ export default {
       this.$store.commit('logout')
       this.jump('/login')
     },
-    submitkey(){
-     if(this.$route.path!=='/tools/searchfile'){
-       this.$router.push({
-         path:'/tools/searchfile',
-         query:{
-           asd:this.SearchInput
-         }
-       })
-     }else{
-       this.$route.query.asd=this.SearchInput
-       //this.loadData()
-     }
+    SubmitKey(){
+      this.$router.push({
+        path:'/tools/searchfile',
+        query:{
+          asd:this.SearchInput
+        }
+      })
     }
   }
 }

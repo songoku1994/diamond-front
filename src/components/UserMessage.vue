@@ -7,29 +7,28 @@
     <div>
       <h2 style="float: left">未读消息</h2>
       <el-table :data="RecentFile" stripe border>
-        <el-table-column prop="Title" label="标题"></el-table-column>
-        <el-table-column prop="SpeakMan" label="发信人"></el-table-column>
-        <el-table-column prop="SendDate" label="发送日期"></el-table-column>
-        <el-table-column prop="SimpleMessage" label="创建日期"></el-table-column>
-        <el-table-column width="161">
-          <el-button-group slot-scope="scope">
-            <el-button type="primary" @click="KnowMore(scope.row)">未读</el-button>
-            <el-button type="danger" @click="DeleteFile(scope.row)">删除</el-button>
-          </el-button-group>
+        <el-table-column prop="fields.type" label="类型"></el-table-column>
+        <el-table-column prop="fields.content" label="内容"></el-table-column>
+        <el-table-column prop="fields.time" label="发送日期"></el-table-column>
+        <el-table-column width="210">
+          <template slot-scope="scope">
+            <el-button type="primary" @click="AlreadyRead(scope.row)" v-if="scope.row.fields.type!=='团队邀请'">标记已读</el-button>
+            <el-button type="danger" @click="Delete(scope.row)" v-if="scope.row.fields.type!=='团队邀请'">删除</el-button>
+            <el-button type="primary" @click="Accept_Refuse(scope.row,true)" v-if="scope.row.fields.type==='团队邀请'">接受邀请</el-button>
+            <el-button type="danger" @click="Accept_Refuse(scope.row,false)" v-if="scope.row.fields.type==='团队邀请'">拒绝</el-button>
+          </template>
         </el-table-column>
       </el-table>
     </div>
     <div>
       <h2 style="float: left">已读消息</h2>
-      <el-table :data="AllFile" stripe border>
-        <el-table-column prop="Title" label="文件名"></el-table-column>
-        <el-table-column prop="SpeakMan" label="作者"></el-table-column>
-        <el-table-column prop="SendDate" label="上次浏览日期"></el-table-column>
-        <el-table-column prop="SimpleMessage" label="创建日期"></el-table-column>
-        <el-table-column width="161">
+      <el-table :data="OldFile" stripe border>
+        <el-table-column prop="fields.type" label="类型"></el-table-column>
+        <el-table-column prop="fields.content" label="内容"></el-table-column>
+        <el-table-column prop="fields.time" label="发送日期"></el-table-column>
+        <el-table-column width="95">
           <el-button-group slot-scope="scope">
-            <el-button type="info" @click="KnowMore(scope.row)">详情</el-button>
-            <el-button type="danger" @click="DeleteFile(scope.row)">删除</el-button>
+            <el-button style="float: right" type="danger" @click="Delete(scope.row,false,scope.$index)">删除</el-button>
           </el-button-group>
         </el-table-column>
       </el-table>
@@ -38,66 +37,82 @@
 </template>
 
 <script>
+  import axios from 'axios'
   export default {
     Title: "UserFile",
     created() {
-      /*这里写后端代码（初始化）
-
-
-
-
-
-
-
-
-       */
+      axios({
+        url:'http://127.0.0.1:8000/myMessage',
+        params:{
+          name: this.$store.state.name,
+          token: this.$store.state.token,
+        }
+      }).then(res=>{
+        for(let i of res.data.message){
+          console.log(i)
+          i.fields.time=this.TimeFormat(i.fields.time)
+          if(i.fields.checked===false)
+            this.RecentFile.push(i)
+          else
+            this.OldFile.push(i)
+        }
+      })
     },
     data(){
       return{
         RecentFile:[
-          {Title:'大师兄，不好了',SendDate:'2020/8/11 18:10',SimpleMessage:'师傅他被妖精抓走了！',SpeakMan:'沙悟净'},
+          // {Title:'大师兄，不好了',SendDate:'2020/8/11 18:10',SimpleMessage:'师傅他被妖精抓走了！',SpeakMan:'沙悟净'},
         ],
-        AllFile:[
-          {Title:'二师兄，不好了',SendDate:'2020/8/11 18:10',SimpleMessage:'师傅他被妖精抓走了！',SpeakMan:'沙悟净'},
-          {Title:'师傅，不好了',SendDate:'2020/8/11 18:10',SimpleMessage:'大师兄和二师兄打起来了！',SpeakMan:'沙悟净'},
+        OldFile:[
+          // {Title:'二师兄，不好了',SendDate:'2020/8/11 18:10',SimpleMessage:'师傅他被妖精抓走了！',SpeakMan:'沙悟净'},
+          // {Title:'师傅，不好了',SendDate:'2020/8/11 18:10',SimpleMessage:'大师兄和二师兄打起来了！',SpeakMan:'沙悟净'},
         ],
       }
     },
     methods:{
-      FindFile(row){
-        for(let i=0;i<this.AllFile.length;i++)
-        {
-          if(row.Title==this.AllFile[i].Title&&row.SendDate==this.AllFile[i].SendDate&&row.SimpleMessage==this.AllFile[i].SimpleMessage&&row.SpeakMan==this.AllFile[i].SpeakMan){
-            return i
+      TimeFormat(str){
+        return str.substring(0,10)+" "+str.substring(11,19)
+      },
+      Accept_Refuse(row,bool){
+        axios({
+          url:'http://127.0.0.1:8000/AcceptToJoinTeam',
+          params: {
+            name: this.$store.state.name,
+            token: this.$store.state.token,
+            tid:row.fields.tid,
+            pmid:row.pk,
+            Accept:bool
           }
-        }
-        return -1
+        }).then(res=>{
+          console.log(res)
+          location.reload()
+        })
       },
-      KnowMore(row){
-        let i=this.FindFile(row)
-        /*后端代码（跳转至编辑界面）
-
-
-
-
-
-
-
-         */
-        this.$router.push('/tools/editfile')
+      AlreadyRead(row){
+        axios({
+          url:'http://127.0.0.1:8000/checkMessage',
+          params: {
+            name: this.$store.state.name,
+            token: this.$store.state.token,
+            pmid:row.pk,
+          }
+        }).then(res=>{
+          console.log(res)
+        })
       },
-      DeleteFile(row){
-        /*后端代码（删除后刷新）
-
-
-
-
-
-
-
-         */
-        location.reload()
-      },
+      Delete(row,isRecent,index){
+        axios({
+          url:'http://127.0.0.1:8000/deleteMessage',
+          params: {
+            name: this.$store.state.name,
+            token: this.$store.state.token,
+            pmid:row.pk,
+          }
+        }).then(res=>{
+          console.log(res)
+          location.reload()
+        })
+      }
     }
   }
 </script>

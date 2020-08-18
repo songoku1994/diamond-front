@@ -2,11 +2,11 @@
 <!--  <div>-->
 <!--    <TopTools/>-->
 <!--    <Aside/>-->
-<!--&lt;!&ndash;    <UserFile></UserFile>&ndash;&gt;-->
-<!--&lt;!&ndash;    <TeamManage/>&ndash;&gt;-->
+<!--    <UserFile></UserFile>-->
+<!--    <TeamManage/>-->
 <!--    <Bin/>-->
 <!--  </div>-->
-    <router-view/>
+  <router-view></router-view>
 </template>
 <script>
   import test from './components/test'
